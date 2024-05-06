@@ -28,8 +28,8 @@ func main() {
 		panic(err)
 	}
 
-	// Calling /sbin/ip link show yields an interface wg-wrap-0
-	out, err := exec.Command("/sbin/ip", "-d", "link", "show", "dev", "wg-wrap-0").Output()
+	// Calling ip link show yields an interface wg-wrap-0
+	out, err := exec.Command("ip", "-d", "link", "show", "dev", "wg-wrap-0").Output()
 	println(string(out))
 
 	// we're able to locate it
@@ -53,7 +53,7 @@ func main() {
 	}
 
 	// we're able to show its address
-	out, err = exec.Command("/sbin/ip", "addr", "show", "wg-wrap-0").Output()
+	out, err = exec.Command("ip", "addr", "show", "wg-wrap-0").Output()
 	println(string(out))
 
 	// add a sample peering to nowhere
@@ -88,7 +88,7 @@ func main() {
 		panic(err)
 	}
 
-	out, err = exec.Command("/sbin/ip", "ro", "show", "dev", "wg-wrap-0").Output()
+	out, err = exec.Command("ip", "ro", "show", "dev", "wg-wrap-0").Output()
 	println(string(out))
 
 	// show the default interface

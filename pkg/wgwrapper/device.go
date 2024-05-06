@@ -19,7 +19,7 @@ type wgwrapper struct {
 }
 
 // AddInterface adds a new wireguard interface
-// by calling /sbin/ip. Also adds given address
+// by calling ip. Also adds given address
 func (wg wgwrapper) AddInterface(intf WireguardInterface) error {
 	i, err := net.InterfaceByName(intf.InterfaceName)
 
@@ -27,19 +27,19 @@ func (wg wgwrapper) AddInterface(intf WireguardInterface) error {
 		// create wireguard interface
 		var cmd *exec.Cmd
 
-		cmd = exec.Command("/sbin/ip", "link", "add", "dev", intf.InterfaceName, "type", "wireguard")
+		cmd = exec.Command("ip", "link", "add", "dev", intf.InterfaceName, "type", "wireguard")
 
 		var stdout, stderr bytes.Buffer
 		cmd.Stdout = &stdout
 		cmd.Stderr = &stderr
 		err := cmd.Run()
 		if err != nil {
-			e := fmt.Sprintf("/sbin/ip reported: %s", err)
+			e := fmt.Sprintf("ip reported: %s", err)
 			return errors.New(e)
 		}
 		_, errStr := string(stdout.Bytes()), string(stderr.Bytes())
 		if len(errStr) > 0 {
-			e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+			e := fmt.Sprintf("ip reported: %s", errStr)
 			return errors.New(e)
 		}
 	}
@@ -56,7 +56,7 @@ func (wg wgwrapper) AddInterface(intf WireguardInterface) error {
 		return err
 	}
 	if len(a) == 0 {
-		cmd := exec.Command("/sbin/ip", "address", "add", "dev", intf.InterfaceName, intf.IP.String())
+		cmd := exec.Command("ip", "address", "add", "dev", intf.InterfaceName, intf.IP.String())
 		var stdout, stderr bytes.Buffer
 		cmd.Stdout = &stdout
 		cmd.Stderr = &stderr
@@ -66,7 +66,7 @@ func (wg wgwrapper) AddInterface(intf WireguardInterface) error {
 		}
 		_, errStr := string(stdout.Bytes()), string(stderr.Bytes())
 		if len(errStr) > 0 {
-			e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+			e := fmt.Sprintf("ip reported: %s", errStr)
 			return errors.New(e)
 		}
 	}
@@ -89,19 +89,19 @@ func (wg wgwrapper) AddInterfaceNoAddr(intf WireguardInterface) error {
 		// create wireguard interface
 		var cmd *exec.Cmd
 
-		cmd = exec.Command("/sbin/ip", "link", "add", "dev", intf.InterfaceName, "type", "wireguard")
+		cmd = exec.Command("ip", "link", "add", "dev", intf.InterfaceName, "type", "wireguard")
 
 		var stdout, stderr bytes.Buffer
 		cmd.Stdout = &stdout
 		cmd.Stderr = &stderr
 		err := cmd.Run()
 		if err != nil {
-			e := fmt.Sprintf("/sbin/ip reported: %s", err)
+			e := fmt.Sprintf("ip reported: %s", err)
 			return errors.New(e)
 		}
 		_, errStr := string(stdout.Bytes()), string(stderr.Bytes())
 		if len(errStr) > 0 {
-			e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+			e := fmt.Sprintf("ip reported: %s", errStr)
 			return errors.New(e)
 		}
 	}
@@ -118,7 +118,7 @@ func (wg wgwrapper) AddInterfaceNoAddr(intf WireguardInterface) error {
 func (wg wgwrapper) SetInterfaceUp(intf WireguardInterface) error {
 
 	// check status
-	cmd := exec.Command("/sbin/ip", "--br", "link", "show", "dev", intf.InterfaceName, "up", "type", "wireguard")
+	cmd := exec.Command("ip", "--br", "link", "show", "dev", intf.InterfaceName, "up", "type", "wireguard")
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
@@ -128,7 +128,7 @@ func (wg wgwrapper) SetInterfaceUp(intf WireguardInterface) error {
 	}
 	outStr, errStr := string(stdout.Bytes()), string(stderr.Bytes())
 	if len(errStr) > 0 {
-		e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+		e := fmt.Sprintf("ip reported: %s", errStr)
 		return errors.New(e)
 	}
 	if len(outStr) > 0 {
@@ -136,14 +136,14 @@ func (wg wgwrapper) SetInterfaceUp(intf WireguardInterface) error {
 	}
 
 	// bring up wireguard interface
-	cmd = exec.Command("/sbin/ip", "link", "set", "up", "dev", intf.InterfaceName)
+	cmd = exec.Command("ip", "link", "set", "up", "dev", intf.InterfaceName)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err = cmd.Run()
 	if err != nil {
 		_, errStr = string(stdout.Bytes()), string(stderr.Bytes())
 		if len(errStr) > 0 {
-			e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+			e := fmt.Sprintf("ip reported: %s", errStr)
 			return errors.New(e)
 		}
 
@@ -155,7 +155,7 @@ func (wg wgwrapper) SetInterfaceUp(intf WireguardInterface) error {
 }
 
 // DeleteInterface takes down an existing wireguard interface
-// by calling /sbin/ip
+// by calling ip
 func (wg wgwrapper) DeleteInterface(intf WireguardInterface) error {
 	i, err := net.InterfaceByName(intf.InterfaceName)
 
@@ -170,24 +170,24 @@ func (wg wgwrapper) DeleteInterface(intf WireguardInterface) error {
 	// take down wireguard interface
 	var cmd *exec.Cmd
 
-	cmd = exec.Command("/sbin/ip", "link", "set", "down", "dev", intf.InterfaceName)
+	cmd = exec.Command("ip", "link", "set", "down", "dev", intf.InterfaceName)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err = cmd.Run()
 	if err != nil {
-		e := fmt.Sprintf("/sbin/ip reported: %s", err)
+		e := fmt.Sprintf("ip reported: %s", err)
 		return errors.New(e)
 	}
 	_, errStr := string(stdout.Bytes()), string(stderr.Bytes())
 	if len(errStr) > 0 {
-		e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+		e := fmt.Sprintf("ip reported: %s", errStr)
 		return errors.New(e)
 	}
 
 	// remove wireguard interface
-	cmd = exec.Command("/sbin/ip", "link", "delete", "dev", intf.InterfaceName, "type", "wireguard")
+	cmd = exec.Command("ip", "link", "delete", "dev", intf.InterfaceName, "type", "wireguard")
 
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
@@ -197,7 +197,7 @@ func (wg wgwrapper) DeleteInterface(intf WireguardInterface) error {
 	}
 	_, errStr = string(stdout.Bytes()), string(stderr.Bytes())
 	if len(errStr) > 0 {
-		e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+		e := fmt.Sprintf("ip reported: %s", errStr)
 		return errors.New(e)
 	}
 

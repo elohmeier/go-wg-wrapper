@@ -5,10 +5,10 @@
 
 This is a convenience wrapper around
 
-* `/sbin/ip`
+* `ip`
 * the go [wgctrl](https://github.com/WireGuard/wgctrl-go) lib
 
-to easily 
+to easily
 
 * create and delete wireguard interfaces,
 * configure them with keys, endpoints etc.,
@@ -17,7 +17,7 @@ to easily
 It does not have a CLI but is intended as a library only.
 See [examples/main.go](examples/main.go) for details.
 
-# Build 
+# Build
 
 This builds on Linux only because it is intended primarily for linux only.
 
@@ -34,7 +34,7 @@ root@wgtest:~# cd /mnt
 ```
 
 Cloud-init script will install wireguard tools and go. Please run go / the binary as root since
-it calls `/sbin/ip` and accesses wireguard via netlink.
+it calls `ip` and accesses wireguard via netlink.
 
 ```bash
 $ go test -cover ./pkg/...

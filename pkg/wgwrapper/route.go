@@ -10,10 +10,10 @@ import (
 	"strings"
 )
 
-// SetRoute checks if there is a route on given interface to network. If not, adds it. all using /sbin/ip
+// SetRoute checks if there is a route on given interface to network. If not, adds it. all using ip
 func (wg wgwrapper) SetRoute(intf WireguardInterface, networkCIDR string) error {
 	//
-	cmd := exec.Command("/sbin/ip", "route", "show", "dev", intf.InterfaceName)
+	cmd := exec.Command("ip", "route", "show", "dev", intf.InterfaceName)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
@@ -23,7 +23,7 @@ func (wg wgwrapper) SetRoute(intf WireguardInterface, networkCIDR string) error 
 	}
 	outStr, errStr := string(stdout.Bytes()), string(stderr.Bytes())
 	if len(errStr) > 0 {
-		e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+		e := fmt.Sprintf("ip reported: %s", errStr)
 		return errors.New(e)
 	}
 	a := strings.Split(outStr, " ")
@@ -35,14 +35,14 @@ func (wg wgwrapper) SetRoute(intf WireguardInterface, networkCIDR string) error 
 	}
 
 	//
-	cmd = exec.Command("/sbin/ip", "route", "add", networkCIDR, "dev", intf.InterfaceName)
+	cmd = exec.Command("ip", "route", "add", networkCIDR, "dev", intf.InterfaceName)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err = cmd.Run()
 	if err != nil {
 		_, errStr = string(stdout.Bytes()), string(stderr.Bytes())
 		if len(errStr) > 0 {
-			e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+			e := fmt.Sprintf("ip reported: %s", errStr)
 			return errors.New(e)
 		}
 
@@ -55,7 +55,7 @@ func (wg wgwrapper) SetRoute(intf WireguardInterface, networkCIDR string) error 
 // DefaultRouteInterface returns the interface name of the default route.
 func (wg wgwrapper) DefaultRouteInterface() (string, error) {
 	//
-	cmd := exec.Command("/sbin/ip", "route", "show", "default")
+	cmd := exec.Command("ip", "route", "show", "default")
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
@@ -65,7 +65,7 @@ func (wg wgwrapper) DefaultRouteInterface() (string, error) {
 	}
 	outStr, errStr := string(stdout.Bytes()), string(stderr.Bytes())
 	if len(errStr) > 0 {
-		e := fmt.Sprintf("/sbin/ip reported: %s", errStr)
+		e := fmt.Sprintf("ip reported: %s", errStr)
 		return "", errors.New(e)
 	}
 	a := strings.Split(outStr, " ")
